@@ -5,8 +5,8 @@ exports.store = store;
 exports.hash = hash;
 exports.constantTimeCompare = constantTimeCompare;
 exports.verify = verify;
-var pbkdf2 = require('crypto').pbkdf2;
-var randomBytes = require('crypto').randomBytes;
+var pbkdf2 = require("crypto").pbkdf2;
+var randomBytes = require("crypto").randomBytes;
 
 
 // Iterations(HEX)|Key+Salt(ENCODING)
@@ -19,10 +19,20 @@ var MAX_KEY_CHARS = 1024;
 var ITERATION_RADIX = 16;
 var MAX_SAFE_INTEGER = 9007199254740991;
 
+/**
+ * Get the current year
+ * @returns {number}
+ */
 function getYear() {
-  return (new Date()).getFullYear();
+  return new Date().getFullYear();
 }
 
+/**
+ * Get recommended iterations for pbkdf2 based on year
+ * https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
+ * @param year {number}
+ * @returns {number}
+ */
 function getIterationsFromYear(year) {
   var iterations = Math.floor(Math.pow(2, (year - 2000) / 2) * 1000);
   if (iterations > MAX_SAFE_INTEGER) {
@@ -31,16 +41,34 @@ function getIterationsFromYear(year) {
   return iterations;
 }
 
+/**
+ * Return a random salt made of <size> bytes
+ * @param size {number} Number of bytes the salt should be
+ * @param cb {Function} (err,salt)
+ */
 function salt(size, cb) {
   randomBytes(Math.floor(size), function (err, rnd) {
     return cb(err || null, err ? void 0 : rnd);
   });
 }
 
+/**
+ * Format the three pieces of information into a string for storage
+ * @param iterations {number}
+ * @param key {Buffer}
+ * @param salt {Buffer}
+ * @returns {string}
+ */
 function store(iterations, key, salt) {
-  return (iterations.toString(ITERATION_RADIX) + SEPARATOR + key.toString(ENCODING) + salt.toString(ENCODING));
+  return iterations.toString(ITERATION_RADIX) + SEPARATOR + key.toString(ENCODING) + salt.toString(ENCODING);
 }
 
+/**
+ * Create a hash from a secret
+ * @param secret {string}
+ * @param iterations {number}
+ * @param cb {Function}
+ */
 function hash(secret, iterations, cb) {
   cb = cb || iterations;
   iterations = iterations === cb ? getIterationsFromYear(getYear()) : iterations;
@@ -51,13 +79,23 @@ function hash(secret, iterations, cb) {
   });
 }
 
+/**
+ * Compare two strings in constant time
+ * taken from https://github.com/ericelliott/credential
+ * @param a {string}
+ * @param b {string}
+ * @returns {boolean}
+ */
 function constantTimeCompare(a, b) {
   //Run Un-optimized in most runtimes
   with ({}) {
     // Add at least one character so that there's at least one thing to modulo over.
     a += " ";
     b += " ";
-    var aLen = a.length, bLen = b.length, match = aLen === bLen ? 1 : 0, i = Math.max(aLen, bLen, MAX_KEY_CHARS);
+    var aLen = a.length,
+        bLen = b.length,
+        match = aLen === bLen ? 1 : 0,
+        i = Math.max(aLen, bLen, MAX_KEY_CHARS);
     while (i--) {
       // We repeat the comparison over the strings with % so that we do not compare
       // a number to NaN, since that has different timing that comparing two numbers.
@@ -67,10 +105,16 @@ function constantTimeCompare(a, b) {
   }
 }
 
+/**
+ * Verify a secret matches an existing hash
+ * @param secret {string}
+ * @param hash {string}
+ * @param cb {Function}
+ */
 function verify(secret, hash, cb) {
-  var salt = hash.substring(hash.length - SALT_SIZE, hash.length);
+  var _salt = hash.substring(hash.length - SALT_SIZE, hash.length);
   var iterations = parseInt(hash.split(SEPARATOR)[0], ITERATION_RADIX);
-  pbkdf2(secret, salt, iterations, KEY_LENGTH, function (err, key) {
-    return cb(err || null, err ? void 0 : constantTimeCompare(hash, store(iterations, key, salt)));
+  pbkdf2(secret, _salt, iterations, KEY_LENGTH, function (err, key) {
+    return cb(err || null, err ? void 0 : constantTimeCompare(hash, store(iterations, key, _salt)));
   });
 }
