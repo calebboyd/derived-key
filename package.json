@@ -1,0 +1,25 @@
+{
+  "name": "derived-key",
+  "version": "0.0.0",
+  "description": "a pbkdf2 password hasher for javascript",
+  "main": "index.js",
+  "dependencies": {
+    "chai": "^1.10.0"
+  },
+  "devDependencies": {
+    "6to5": "^2.9.4",
+    "mocha": "^2.1.0"
+  },
+  "scripts": {
+    "test": "mocha test.js src_test.js --compilers js:6to5/register",
+    "build": "6to5 src.es6.js --out-file src.js --blacklist useStrict"
+  },
+  "keywords": [
+    "pbkdf2",
+    "hashing",
+    "password",
+    "hash"
+  ],
+  "author": "calebboyd",
+  "license": "MIT"
+}
