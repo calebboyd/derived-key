@@ -45,8 +45,8 @@ export function salt(size,cb){
 /**
  * Format the three pieces of information into a string for storage
  * @param iterations {number}
- * @param key {Buffer}
- * @param salt {Buffer}
+ * @param key {Buffer|string}
+ * @param salt {Buffer|string}
  * @returns {string}
  */
 export function store(iterations,key,salt){
