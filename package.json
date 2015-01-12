@@ -1,13 +1,13 @@
 {
   "name": "derived-key",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "a pbkdf2 password hasher for javascript",
   "main": "index.js",
   "dependencies": {
-    "chai": "^1.10.0"
   },
   "devDependencies": {
     "6to5": "^2.9.4",
+    "chai": "^1.10.0",
     "mocha": "^2.1.0"
   },
   "scripts": {
