@@ -55,13 +55,13 @@ describe('derived-key',() => {
     })
     it('it should verify another secret matches a given hash', done =>{
       dk.verify('secret',hash, (e,y) => {
-        expect(y).to.be.true()
+        expect(y).to.be.true
         done()
       })
     })
     it('should not match an incorrect secret', done => {
       dk.verify('Secret',hash, (e,y) => {
-        expect(y).to.be.false()
+        expect(y).to.be.false
         done()
       })
     })

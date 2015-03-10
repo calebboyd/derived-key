@@ -37,8 +37,8 @@ export function getIterationsFromYear(year){
  * @param size {number} Number of bytes the salt should be
  * @param cb {Function} (err,salt)
  */
-export function salt(size,cb){
-  randomBytes(Math.floor(size),(err,rnd) =>
+export function salt(size, cb){
+  randomBytes(Math.floor(size),(err, rnd) =>
     cb(err || null, err ? void 0 : rnd))
 }
 
@@ -49,7 +49,7 @@ export function salt(size,cb){
  * @param salt {Buffer|string}
  * @returns {string}
  */
-export function store(iterations,key,salt){
+export function store(iterations, key, salt){
   return (iterations.toString(ITERATION_RADIX)
           + SEPARATOR + key.toString(ENCODING)
           + salt.toString(ENCODING))
@@ -64,9 +64,9 @@ export function store(iterations,key,salt){
 export function hash(secret, iterations, cb){
   cb = cb || iterations
   iterations = iterations === cb ? getIterationsFromYear(getYear()) : iterations
-  salt(SALT_SIZE,(err,salt) => err ? cb(err) :
-    pbkdf2(secret, salt.toString(ENCODING), iterations, KEY_LENGTH,(err,key) =>
-      cb(err || null, err ? void 0 : store(iterations,key,salt))))
+  salt(SALT_SIZE,(err, salt) => err ? cb(err) :
+    pbkdf2(secret, salt.toString(ENCODING), iterations, KEY_LENGTH,(err, key) =>
+      cb(err || null, err ? void 0 : store(iterations, key, salt))))
 }
 
 /**
@@ -102,7 +102,7 @@ export function constantTimeCompare(a, b) {
  */
 export function verify(secret,hash,cb){
   let salt = hash.substring(hash.length - SALT_SIZE, hash.length)
-  let iterations = parseInt(hash.split(SEPARATOR)[0],ITERATION_RADIX)
-  pbkdf2(secret,salt,iterations, KEY_LENGTH, (err,key) => cb(err || null, err ?
-    void 0 : constantTimeCompare(hash,store(iterations,key,salt))))
+  let iterations = parseInt(hash.split(SEPARATOR)[0], ITERATION_RADIX)
+  pbkdf2(secret, salt, iterations, KEY_LENGTH, (err,key) => cb(err || null, err ?
+    void 0 : constantTimeCompare(hash, store(iterations,key,salt))))
 }
