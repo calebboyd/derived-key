@@ -1,6 +1,6 @@
 {
   "name": "derived-key",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a pbkdf2 password hasher for javascript",
   "main": "index.js",
   "dependencies": {

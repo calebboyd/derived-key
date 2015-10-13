@@ -5,11 +5,11 @@ Generate a secure hash to store secrets (passwords) with
 ```javascript
 import { hash, verify } from 'derived-key'
 
-hash('password',(e,hash) => {
-  verify('passwor',hash, (e,same) => {
-    console.log(same) //false
-  })
-})
+const hash = await hash('password')
+
+const isVerified = await verify('passwor', hash)
+
+console.log(isVerified) //false
 ```
 
 ### Building & Testing
@@ -18,4 +18,4 @@ hash('password',(e,hash) => {
 
 `npm test`
 
-`npm run build`
+`npm run prepublish`
