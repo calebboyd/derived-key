@@ -1,3 +1,3 @@
-var dk = require('./src.js')
+var dk = require('./lib/index')
 exports.hash = dk.hash
 exports.verify = dk.verify
