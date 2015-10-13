@@ -1,17 +1,20 @@
 {
   "name": "derived-key",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "a pbkdf2 password hasher for javascript",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "buffer-equal-constant-time": "^1.0.1",
+    "urlsafe-base64": "^1.0.0"
+  },
   "devDependencies": {
-    "babel": "^4.7.4",
+    "babel": "^5.8.23",
     "chai": "^2.1.1",
     "mocha": "^2.2.1"
   },
   "scripts": {
     "test": "mocha test.js --compilers js:babel/register",
-    "build": "babel src.es6.js --out-file src.js"
+    "prepublish": "babel --out-dir lib src"
   },
   "keywords": [
     "pbkdf2",
