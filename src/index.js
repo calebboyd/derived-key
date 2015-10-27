@@ -64,7 +64,7 @@ export function hash(
     saltSize = SALT_SIZE,
     keyLength = KEY_LENGTH
   } = {}) {
-  if (!secret) throw new Error('invalid secret')
+  if (!secret) return Promise.reject(new Error('invalid secret'))
   return new Promise((resolve, reject) => {
     salt(saltSize, (error, salt) => {
       if (error) return reject(new Error('Error hashing secret'))
