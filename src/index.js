@@ -3,8 +3,8 @@ import { encode, decode } from 'urlsafe-base64'
 import slowEquals from 'buffer-equal-constant-time'
 
 //hash length
-const KEY_LENGTH = 32
-const SALT_SIZE = 16
+const KEY_LENGTH = 128
+const SALT_SIZE = 32
 const MAX_SAFE_INTEGER = 9007199254740991
 
 /**
@@ -59,8 +59,8 @@ export function store(iterations, key, salt){
 export function hash(
   secret,
   {
-    iterations = getIterationsFromYear(getYear()),
-    algorithm = 'sha1',
+    iterations = getIterationsFromYear(getYear()) / 2,
+    algorithm = 'sha256',
     saltSize = SALT_SIZE,
     keyLength = KEY_LENGTH
   } = {}) {
@@ -82,7 +82,7 @@ export function hash(
  * @param hash {string}
  * @param cb {Function}
  */
-export function verify(secret, hash, { algorithm = 'sha1'} = {}){
+export function verify(secret, hash, { algorithm = 'sha256'} = {}){
   let [iterations, key, salt] = hash.split('.')
   iterations = Number.parseInt(iterations, 16)
   key = decode(key)

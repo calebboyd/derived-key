@@ -1,8 +1,11 @@
 {
   "name": "derived-key",
-  "version": "1.0.3",
+  "version": "2.0.1",
   "description": "a pbkdf2 password hasher for javascript",
   "main": "index.js",
+  "files": [
+    "lib"
+  ],
   "dependencies": {
     "buffer-equal-constant-time": "^1.0.1",
     "urlsafe-base64": "^1.0.0"
@@ -22,6 +25,6 @@
     "password",
     "hash"
   ],
-  "author": "Caleb Boyd (https://github.com/calebboyd)",
+  "author": "Caleb Boyd (https://github.com/calebboyd) <caleb.boyd@gmail.com>",
   "license": "MIT"
 }

@@ -2,11 +2,11 @@ import { expect } from 'chai'
 import * as dk from '../src/'
 
 describe('derived-key', () => {
-  describe('getYear', () =>{
-    it('should return the current year', () =>{
+  describe('getYear', () =>
+    it('should return the current year', () =>
       expect(dk.getYear()).to.equal(2015)
-    })
-  })
+    )
+  )
   describe('getIterationsFromYear', () => {
     //https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
     it('should return the correct number of iterations', () => {
@@ -32,10 +32,9 @@ describe('derived-key', () => {
   describe('hash', () => {
     let hash
     beforeEach(async () => hash = await dk.hash('secret', { iterations: 1000 }))
-    it('should take a secret string and return a hash', () =>{
-      console.log(hash)
-        expect(hash).to.be.a('string')
-    })
+    it('should take a secret string and return a hash', () =>
+      expect(hash).to.be.a('string')
+    )
     it('should have the iterations stored on it', () =>
       expect(parseInt(hash.split('.')[0], 16)).to.equal(1000)
     )
