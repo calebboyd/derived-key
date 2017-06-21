@@ -7,7 +7,7 @@ import { hash, verify } from 'derived-key'
 
 async function main () {
   const hashed = await hash('password')    
-  return verify('passwor', hashed)
+  return verify('password', hashed)
 }
 
 main().then(x => console.log(x)) //false
