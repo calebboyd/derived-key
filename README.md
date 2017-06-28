@@ -10,7 +10,7 @@ async function main () {
   return verify('password', hashed)
 }
 
-main().then(x => console.log(x)) //false
+main().then(x => console.log(x)) //true
 ```
 
 ### Building & Testing
