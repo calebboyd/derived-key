@@ -4,30 +4,6 @@ import { base64urlDecode as decode, base64urlEncode as encode } from '@hapi/b64'
 //hash length
 const KEY_LENGTH = 128
 const SALT_SIZE = 32
-const MAX_SAFE_INTEGER = 9007199254740991
-
-/**
- * Get the current year
- * @returns {number}
- */
-export function getYear() {
-  return new Date().getFullYear()
-}
-
-/**
- * Get recommended iterations for pbkdf2 based on year
- * Start with 1000 iterations in y2k double every 2 years thereafter
- * https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
- * @param year {number}
- * @returns {number}
- */
-export function getIterationsFromYear(year: number) {
-  const iterations = Math.floor(Math.pow(2, (year - 2000) / 2) * 1000)
-  if (iterations > MAX_SAFE_INTEGER) {
-    return MAX_SAFE_INTEGER
-  }
-  return iterations
-}
 
 /**
  * Return a random salt made of <size> bytes
@@ -57,12 +33,7 @@ export function store(iterations: number, key: string | Buffer, salt: string | B
  */
 export function hash(
   secret: string,
-  {
-    iterations = getIterationsFromYear(getYear()) / 2,
-    algorithm = 'sha256',
-    saltSize = SALT_SIZE,
-    keyLength = KEY_LENGTH,
-  } = {}
+  { iterations = 100000, algorithm = 'sha256', saltSize = SALT_SIZE, keyLength = KEY_LENGTH } = {}
 ): Promise<string> {
   if (!secret) return Promise.reject(new Error('invalid secret'))
   return new Promise((resolve, reject) => {

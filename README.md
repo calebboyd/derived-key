@@ -1,6 +1,6 @@
 ## derived-key
 
-Generate a secure hash to store secrets (passwords) with
+Generate a secure (one-way) hash to store secrets with
 
 ```javascript
 import { hash, verify } from 'derived-key'
@@ -15,8 +15,6 @@ main().then(x => console.log(x)) //true
 
 ### Building & Testing
 
-`npm install`
+`npm i`
 
-`npm test`
-
-`npm run prepublish`
+`npm run watch`

@@ -1,23 +1,6 @@
 import * as dk from './dk'
 
 describe('derived-key', () => {
-  describe('getYear', () => {
-    it('should return the current year', () => expect(dk.getYear()).toEqual(new Date().getFullYear()))
-  })
-  describe('getIterationsFromYear', () => {
-    //https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
-    it('should return the correct number of iterations', () => {
-      expect(dk.getIterationsFromYear(0)).toEqual(0)
-      //baseline 1000 in y2k
-      expect(dk.getIterationsFromYear(2000)).toEqual(1000)
-      expect(dk.getIterationsFromYear(2015)).toEqual(181019)
-    })
-    it('should max out in 2087', () => {
-      expect(dk.getIterationsFromYear(2086)).toBeLessThan(Math.pow(2, 53) - 1)
-      expect(dk.getIterationsFromYear(2087)).toEqual(Math.pow(2, 53) - 1)
-      expect(dk.getIterationsFromYear(2100)).toEqual(Math.pow(2, 53) - 1)
-    })
-  })
   describe('store', () => {
     it('concatenates the variables with .', () => {
       expect(dk.store(5, 'hello', 'world')).toEqual('5.aGVsbG8.d29ybGQ')
