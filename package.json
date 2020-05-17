@@ -1,23 +1,40 @@
 {
   "name": "derived-key",
-  "version": "2.0.1",
-  "description": "a pbkdf2 password hasher for javascript",
-  "main": "index.js",
+  "version": "3.0.0",
+  "description": "pbkdf2 password hashing for javascript",
+  "main": "lib/dk",
   "files": [
-    "lib"
+    "lib",
+    "!**/*.spec.js"
   ],
+  "scripts": {
+    "build": "rm -rf lib && npm run lint && tsc",
+    "commitlint": "commitlint -f $(git rev-list --tags --max-count=1) -t $(git log --pretty=%H | head -1)",
+    "lint": "eslint \"src/**/*\" --fix --ext \"*.ts\"",
+    "prepublishOnly": "npm run build && npm run commitlint",
+    "test": "jest",
+    "watch": "npm run build && concurrently -k \"npm:watch:typescript\" \"npm:watch:test\" -c blue,green",
+    "watch:test": "jest --watchAll",
+    "watch:typescript": "tsc -w"
+  },
   "dependencies": {
-    "buffer-equal-constant-time": "^1.0.1",
-    "urlsafe-base64": "^1.0.0"
+    "@hapi/b64": "^5.0.0"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
-    "chai": "^2.1.1",
-    "mocha": "^2.2.1"
-  },
-  "scripts": {
-    "test": "mocha test.js --compilers js:babel/register",
-    "prepublish": "babel --out-dir lib src"
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-angular": "^8.3.4",
+    "@types/hapi__b64": "^5.0.0",
+    "@types/jest": "^25.2.2",
+    "@types/node": "^14.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "concurrently": "^5.2.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "~6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.2"
   },
   "keywords": [
     "pbkdf2",
@@ -26,5 +43,66 @@
     "hash"
   ],
   "author": "Caleb Boyd (https://github.com/calebboyd) <caleb.boyd@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "jest": {
+    "testRegex": ".*?(\\.spec).js",
+    "watchPathIgnorePatterns": [
+      "\\.ts$"
+    ]
+  },
+  "prettier": {
+    "parser": "typescript",
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 120
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-angular"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "build",
+          "ci",
+          "docs",
+          "feat",
+          "fix",
+          "perf",
+          "refactor",
+          "release",
+          "revert",
+          "style",
+          "test"
+        ]
+      ]
+    }
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "prettier/@typescript-eslint",
+      "plugin:prettier/recommended"
+    ],
+    "ignorePatterns": [
+      "*.d.ts"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.spec.ts"
+        ],
+        "env": {
+          "jest": true
+        }
+      }
+    ],
+    "rules": {
+      "@typescript-eslint/explicit-function-return-type": 0,
+      "@typescript-eslint/no-use-before-define": 0
+    }
+  }
 }

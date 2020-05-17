@@ -1,6 +1,5 @@
-import { pbkdf2, randomBytes } from 'crypto'
-import { encode, decode } from 'urlsafe-base64'
-import slowEquals from 'buffer-equal-constant-time'
+import { pbkdf2, randomBytes, timingSafeEqual } from 'crypto'
+import { base64urlDecode as decode, base64urlEncode as encode } from '@hapi/b64'
 
 //hash length
 const KEY_LENGTH = 128
@@ -11,8 +10,8 @@ const MAX_SAFE_INTEGER = 9007199254740991
  * Get the current year
  * @returns {number}
  */
-export function getYear(){
-  return (new Date).getFullYear()
+export function getYear() {
+  return new Date().getFullYear()
 }
 
 /**
@@ -22,9 +21,9 @@ export function getYear(){
  * @param year {number}
  * @returns {number}
  */
-export function getIterationsFromYear(year){
+export function getIterationsFromYear(year: number) {
   const iterations = Math.floor(Math.pow(2, (year - 2000) / 2) * 1000)
-  if(iterations > MAX_SAFE_INTEGER){
+  if (iterations > MAX_SAFE_INTEGER) {
     return MAX_SAFE_INTEGER
   }
   return iterations
@@ -35,7 +34,7 @@ export function getIterationsFromYear(year){
  * @param size {number} Number of bytes the salt should be
  * @param cb {Function} (err,salt)
  */
-export function salt(size = SALT_SIZE, cb){
+export function salt(size = SALT_SIZE, cb: (err: Error | null, salt: Buffer) => void) {
   randomBytes(Math.floor(size), cb)
 }
 
@@ -46,8 +45,8 @@ export function salt(size = SALT_SIZE, cb){
  * @param salt {Buffer|string}
  * @returns {string}
  */
-export function store(iterations, key, salt){
-  return `${iterations.toString(16)}.${encode(key)}.${encode(salt)}`
+export function store(iterations: number, key: string | Buffer, salt: string | Buffer) {
+  return `${iterations.toString(16)}.${encode(key, 'utf-8')}.${encode(salt, 'utf-8')}`
 }
 
 /**
@@ -57,13 +56,14 @@ export function store(iterations, key, salt){
  * @param cb {Function}
  */
 export function hash(
-  secret,
+  secret: string,
   {
     iterations = getIterationsFromYear(getYear()) / 2,
     algorithm = 'sha256',
     saltSize = SALT_SIZE,
-    keyLength = KEY_LENGTH
-  } = {}) {
+    keyLength = KEY_LENGTH,
+  } = {}
+): Promise<string> {
   if (!secret) return Promise.reject(new Error('invalid secret'))
   return new Promise((resolve, reject) => {
     salt(saltSize, (error, salt) => {
@@ -82,16 +82,16 @@ export function hash(
  * @param hash {string}
  * @param cb {Function}
  */
-export function verify(secret, hash, { algorithm = 'sha256'} = {}){
-  let [iterations, key, salt] = hash.split('.')
-  iterations = Number.parseInt(iterations, 16)
-  key = decode(key)
-  salt = decode(salt)
+export function verify(secret: string, hash: string, { algorithm = 'sha256' } = {}) {
+  const [iterations, key, salt] = hash.split('.'),
+    iterationCount = Number.parseInt(iterations, 16),
+    decodedKey = decode(key, 'buffer'),
+    decodedSalt = decode(salt, 'buffer')
 
   return new Promise((resolve, reject) => {
-    pbkdf2(secret, salt, iterations, key.length, algorithm, (error, derivedKey) => {
+    pbkdf2(secret, decodedSalt, iterationCount, decodedKey.length, algorithm, (error, derivedKey) => {
       if (error) return reject(new Error('Error verifying hash'))
-      resolve(slowEquals(derivedKey, key))
+      resolve(timingSafeEqual(derivedKey, decodedKey))
     })
   })
 }
