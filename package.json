@@ -1,6 +1,6 @@
 {
   "name": "derived-key",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "pbkdf2 password hashing for javascript",
   "main": "lib/dk",
   "files": [
@@ -24,17 +24,21 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "@types/hapi__b64": "^5.0.0",
-    "@types/jest": "^25.2.2",
-    "@types/node": "^14.0.1",
-    "@typescript-eslint/eslint-plugin": "^2.33.0",
-    "@typescript-eslint/parser": "^2.33.0",
+    "@types/jest": "^25.2.3",
+    "@types/node": "^14.0.11",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
     "concurrently": "^5.2.0",
-    "eslint": "^7.0.0",
+    "eslint": "^7.1.0",
     "eslint-config-prettier": "~6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
-    "typescript": "^3.9.2"
+    "typescript": "^3.9.5"
+  },
+  "repository": {
+    "url": "https://github.com/calebboyd/derived-key",
+    "type": "git"
   },
   "keywords": [
     "pbkdf2",
