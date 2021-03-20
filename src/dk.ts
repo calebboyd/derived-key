@@ -10,7 +10,7 @@ const SALT_SIZE = 32
  * @param size {number} Number of bytes the salt should be
  * @param cb {Function} (err,salt)
  */
-export function salt(size = SALT_SIZE, cb: (err: Error | null, salt: Buffer) => void) {
+export function salt(size = SALT_SIZE, cb: (err: Error | null, salt: Buffer) => void): void {
   randomBytes(Math.floor(size), cb)
 }
 
@@ -21,7 +21,7 @@ export function salt(size = SALT_SIZE, cb: (err: Error | null, salt: Buffer) => 
  * @param salt {Buffer|string}
  * @returns {string}
  */
-export function store(iterations: number, key: string | Buffer, salt: string | Buffer) {
+export function store(iterations: number, key: string | Buffer, salt: string | Buffer): string {
   return `${iterations.toString(16)}.${encode(key, 'utf-8')}.${encode(salt, 'utf-8')}`
 }
 
@@ -49,11 +49,11 @@ export function hash(
 
 /**
  * Verify a secret matches an existing hash
- * @param secret {string}
- * @param hash {string}
- * @param cb {Function}
+ * @param secret
+ * @param hash
+ * @returns
  */
-export function verify(secret: string, hash: string, { algorithm = 'sha256' } = {}) {
+export function verify(secret: string, hash: string, { algorithm = 'sha256' } = {}): Promise<boolean> {
   const [iterations, key, salt] = hash.split('.'),
     iterationCount = Number.parseInt(iterations, 16),
     decodedKey = decode(key, 'buffer'),
